@@ -187,8 +187,16 @@ let url, content, $;
 
           // color 리스트 접근
           colorList = await page.$$(
-            "#autodanawa_gridC > div.gridMain > article > main > div.modelSummary.auto.new > div.photo > div "
+            "#autodanawa_gridC > div.gridMain > article > main > div.modelSummary.auto.new > div.photo > div"
           );
+
+          try {
+            await page.hover(`#autodanawa_gridC > div.gridMain > article > main > div.modelSummary.auto.new > div.photo > div > button:nth-child(2)`);
+          }
+          catch (e) {
+            if (e instanceof Error)
+              console.log('색상 없음');
+          }
 
           // * colorList가 없어서 삽입 넘어감 -> 위치 변경
           car_data = {
@@ -221,6 +229,9 @@ let url, content, $;
               (element) => element != ''
             );
 
+            // hover로 인한 중복 컬러 값 제거
+            // division = Array.from(new Set(division));
+
             // hover 값 제거 : 항상 0번째 원소
             await division.splice(0, 1);
 
@@ -248,7 +259,7 @@ let url, content, $;
             car_data.car_color = JSON.stringify(division);
             car_data.car_color_code = JSON.stringify(c_code);
           }
-          await querys.insertColor(car_data);
+          // await querys.insertColor(car_data);
           console.log("===================");
           console.log(car_data);
         }
